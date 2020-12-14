@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "198710695332",
+    "project_id": "my-yelp-compound-app",
+    "storage_bucket": "my-yelp-compound-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:198710695332:android:5352e852e2a4b8335d1d31",
+        "android_client_info": {
+          "package_name": "com.example.finalproject"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "198710695332-bei5i1r9hui01kms43hh4ilqqnvrdsgs.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyASRp7C77MIZZK3wo4X9LIfKklwbU641Ks"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "198710695332-bei5i1r9hui01kms43hh4ilqqnvrdsgs.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
