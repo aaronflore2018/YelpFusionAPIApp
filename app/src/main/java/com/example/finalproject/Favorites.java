@@ -34,7 +34,7 @@ public class Favorites extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_favorites);
-        fillListView();
+        //fillListView();
         context = getApplicationContext();
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
 
@@ -76,8 +76,8 @@ public class Favorites extends AppCompatActivity {
                     }
                 });
         
-        ListView favoritesListView = findViewById(R.id.favoritesList);
+        //ListView favoritesListView = findViewById(R.id.favoritesList);
         ArrayAdapter<String> itemsAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1,list);
-        favoritesListView.setAdapter(itemsAdapter);
+        //favoritesListView.setAdapter(itemsAdapter);
     }
 }

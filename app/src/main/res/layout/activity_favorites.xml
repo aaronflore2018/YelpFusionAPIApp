@@ -15,13 +15,6 @@
         android:text="Favorites"
         android:textSize="36sp" />
 
-    <ListView
-        android:id="@+id/favoritesList"
-        android:layout_width="match_parent"
-        android:layout_height="585dp">
-
-    </ListView>
-
     <LinearLayout
         android:id="@+id/linearLayout3"
         android:layout_width="match_parent"
@@ -34,6 +27,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
+            app:itemBackground="@drawable/ic_launcher_background"
             app:itemHorizontalTranslationEnabled="false"
             app:itemIconTint="@color/black"
             app:itemTextColor="@color/black"

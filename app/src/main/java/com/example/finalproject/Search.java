@@ -31,6 +31,7 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -162,20 +163,18 @@ public class Search extends AppCompatActivity implements OnSuccessListener<Locat
     }
 
     private void getBusinessByName(String name, String loc) {
-        String url = getString(R.string.YAHOO_API_URL_BASE) + name;
-        System.out.println(url);
+        String url = getString(R.string.YAHOO_API_URL_TERM) + name + "&location=" + loc;
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
                 (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
 
                     @Override
                     public void onResponse(JSONObject response) {
                         try {
-                            JSONObject main = response.getJSONObject("main");
-                            JSONObject coords = response.getJSONObject("coord");
-                            JSONObject wind = response.getJSONObject("wind");
-
+                            JSONObject result = response.getJSONArray("businesses").getJSONObject(0);
+                            System.out.println(result.getString("name"));
                         } catch (JSONException e) {
                             System.out.println("JSON EXPLOSION");
+                            System.out.println(e);
                         }
 
 

@@ -67,9 +67,10 @@
         android:textSize="36sp"
         android:translationX="150dp" />
 
-    <ListView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="485dp" />
+        android:layout_height="479dp"
+        android:orientation="vertical"/>
 
     <LinearLayout
         android:layout_width="match_parent"
