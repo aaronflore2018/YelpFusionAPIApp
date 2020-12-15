@@ -1,3 +1,6 @@
 <resources>
-    <string name="app_name">Final Project</string>
+    <string name="app_name">Yahoo Fusion API App</string>
+    <string name="YAHOO_API_URL_BASE">https://api.yelp.com/v3/businesses/</string>
+    <string name="YAHOO_API_URL_TERM">https://api.yelp.com/v3/businesses/search?term=</string>
+    <string name="YAHOO_API_KEY">ZkX0lRdzSLXJkbVwUDLUckjpdguXC3tkpxgMS7PA_eGODK6WPmg5MfC-s52X4QHHmKTvqwW-_RoplgZlhNW7soa8qukQCH9p3zea7Ilb48fQjK-Lohe1B6GR5BazX3Yx</string>
 </resources>

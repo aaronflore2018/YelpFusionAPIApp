@@ -16,6 +16,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -25,7 +26,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.HashMap;
 import java.util.Map;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity<item> extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
     private String TAG;
@@ -44,6 +45,24 @@ public class MainActivity extends AppCompatActivity {
         email = findViewById(R.id.email);
         password = findViewById(R.id.password);
         context = getApplicationContext();
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+
+        bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
+            switch (item.getItemId()) {
+                case R.id.action_login:
+                    Toast.makeText(MainActivity.this, "Login", Toast.LENGTH_SHORT).show();
+                    break;
+                case R.id.action_search:
+                    Intent intent = new Intent(context, Search.class);
+                    startActivity(intent);
+                    break;
+                case R.id.action_favorites:
+                    Intent intent2 = new Intent(context, Favorites.class);
+                    startActivity(intent2);
+                    break;
+            }
+            return true;
+        });
     }
 
     public void onSignInClick(View v){
