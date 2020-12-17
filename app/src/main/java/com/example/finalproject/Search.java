@@ -52,6 +52,7 @@ public class Search extends AppCompatActivity implements OnSuccessListener<Locat
     private RequestQueue queue;
     private Context context;
     private ListView listView;
+    public static Business currentBusiness = new Business();
 
     //LOCATION REQUEST CODE KEY, not important since only asking for a single permission and don't need to distinguish
     public static final int LOCATION_REQUEST_CODE = 11;
@@ -89,6 +90,8 @@ public class Search extends AppCompatActivity implements OnSuccessListener<Locat
             return true;
         });
     }
+
+    public static Business getBusinessInstance() {return currentBusiness;}
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -187,13 +190,14 @@ public class Search extends AppCompatActivity implements OnSuccessListener<Locat
                                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                                     try {
                                         JSONObject result = results.getJSONObject(position);
-                                        Business currentBusiness = new Business();
                                         currentBusiness.setName(result.getString("name"));
                                         currentBusiness.setId(result.getString("id"));
-                                        currentBusiness.setPhone(result.getString("phone"));
-                                        currentBusiness.setAddress(result.getJSONObject("location").getString("display_address"));
+                                        currentBusiness.setPhone(result.getString("display_phone"));
+                                        currentBusiness.setAddress(result.getJSONObject("location").getString("address1"));
                                         currentBusiness.setRating(result.getString("rating"));
                                         currentBusiness.setPrice(result.getString("price"));
+                                        currentBusiness.setLat(result.getJSONObject("coordinates").getString("latitude"));
+                                        currentBusiness.setLon(result.getJSONObject("coordinates").getString("longitude"));
                                     } catch (JSONException e) {
                                         e.printStackTrace();
                                     }

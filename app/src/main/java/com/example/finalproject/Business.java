@@ -7,6 +7,8 @@ public class Business {
     private String phone;
     private String rating;
     private String price;
+    private String lat;
+    private String lon;
 
     public Business(){};
 
@@ -22,6 +24,10 @@ public class Business {
 
     public void setPrice(String p){this.price = p;}
 
+    public void setLat(String l){this.lat = l;}
+
+    public void setLon(String l){this.lon = l;}
+
     public String getName(){return this.name;}
 
     public String getId(){return this.id;}
@@ -33,4 +39,8 @@ public class Business {
     public String getRating(){return this.rating;};
 
     public String getPrice(){return this.price;}
+
+    public String getLat(){return this.lat;}
+
+    public String getLon(){return this.lat;}
 }
