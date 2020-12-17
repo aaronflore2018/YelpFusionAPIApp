@@ -9,20 +9,15 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.SimpleAdapter;
 import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -30,12 +25,14 @@ import com.google.firebase.firestore.QuerySnapshot;
 public class Favorites extends AppCompatActivity {
     private String TAG;
     private Context context;
+    private ListView listView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_favorites);
-        //fillListView();
+        fillListView();
         context = getApplicationContext();
+        listView = findViewById(R.id.favorites_list);
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
 
         bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
@@ -59,7 +56,7 @@ public class Favorites extends AppCompatActivity {
     public void fillListView() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        ArrayList list = new ArrayList();
+        ArrayList<String> list = new ArrayList<>();
         db.collection("users").document(user.getUid()).collection("favorites")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -67,8 +64,12 @@ public class Favorites extends AppCompatActivity {
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot document : task.getResult()) {
-                                Log.d(TAG, document.getId() + " => " + document.getData());
-                                list.add(document.getId());
+                                System.out.println(document.getId() + " => " + document.getData());
+                                if(document.getData().get("name") != null){
+                                    list.add(document.getData().get("name").toString());
+                                }
+                                ArrayAdapter listViewAdapter = new ArrayAdapter(context,android.R.layout.simple_list_item_1,list);
+                                listView.setAdapter(listViewAdapter);
                             }
                         } else {
                             Log.d(TAG, "Error getting documents: ", task.getException());
