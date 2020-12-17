@@ -1,6 +1,5 @@
 package com.example.finalproject;
 
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
@@ -10,13 +9,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
-import android.os.Build;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -50,6 +51,7 @@ public class Search extends AppCompatActivity implements OnSuccessListener<Locat
     //Volley request queue;
     private RequestQueue queue;
     private Context context;
+    private ListView listView;
 
     //LOCATION REQUEST CODE KEY, not important since only asking for a single permission and don't need to distinguish
     public static final int LOCATION_REQUEST_CODE = 11;
@@ -63,6 +65,7 @@ public class Search extends AppCompatActivity implements OnSuccessListener<Locat
         locationButton = findViewById(R.id.locButton);
         locationEditText = findViewById(R.id.locationEditText);
         nameEditText = findViewById(R.id.nameEditText);
+        listView = findViewById(R.id.resultsListView);
         context = getApplicationContext();
 
         //Instantiate the request queue
@@ -159,25 +162,49 @@ public class Search extends AppCompatActivity implements OnSuccessListener<Locat
     }
 
     private void getBusinessByLocation(String lat, String lon, String name) {
-        String url = getString(R.string.YAHOO_API_URL_TERM) + name + "&latitude=" + lat + "&longitude=" + lon;
+        String url = getString(R.string.YELP_API_URL_TERM) + name + "&latitude=" + lat + "&longitude=" + lon;
     }
 
     private void getBusinessByName(String name, String loc) {
-        String url = getString(R.string.YAHOO_API_URL_TERM) + name + "&location=" + loc;
+        String url = getString(R.string.YELP_API_URL_TERM) + name + "&location=" + loc;
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
                 (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
 
                     @Override
                     public void onResponse(JSONObject response) {
+                        JSONArray results;
                         try {
-                            JSONObject result = response.getJSONArray("businesses").getJSONObject(0);
-                            System.out.println(result.getString("name"));
+                            results = response.getJSONArray("businesses");
+                            ArrayList<String> listViewArray = new ArrayList<String>();
+                            for(int i = 0; i < results.length(); i++){
+                                listViewArray.add(results.getJSONObject(i).getString("name"));
+                            }
+                            ArrayAdapter listViewAdapter = new ArrayAdapter(context,android.R.layout.simple_list_item_1,listViewArray);
+                            listView.setAdapter(listViewAdapter);
+                            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+                                @Override
+                                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                                    try {
+                                        JSONObject result = results.getJSONObject(position);
+                                        Business currentBusiness = new Business();
+                                        currentBusiness.setName(result.getString("name"));
+                                        currentBusiness.setId(result.getString("id"));
+                                        currentBusiness.setPhone(result.getString("phone"));
+                                        currentBusiness.setAddress(result.getJSONObject("location").getString("display_address"));
+                                        currentBusiness.setRating(result.getString("rating"));
+                                        currentBusiness.setPrice(result.getString("price"));
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
+                                    Intent intent = new Intent(context, Result.class);
+                                    startActivity(intent);
+                                }
+                            });
                         } catch (JSONException e) {
                             System.out.println("JSON EXPLOSION");
                             System.out.println(e);
                         }
-
-
                     }
                 }, new Response.ErrorListener() {
 
@@ -190,7 +217,7 @@ public class Search extends AppCompatActivity implements OnSuccessListener<Locat
                     @Override
                     public Map<String, String> getHeaders() throws AuthFailureError {
                         Map<String, String> headerMap = new HashMap<String, String>();
-                        headerMap.put("Authorization", "Bearer " + getString(R.string.YAHOO_API_KEY));
+                        headerMap.put("Authorization", "Bearer " + getString(R.string.YELP_API_KEY));
                         return headerMap;
                     }
         };
