@@ -143,7 +143,6 @@ public class MainActivity<item> extends AppCompatActivity {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         // Create a new user with a first and last name
         Map<String, Object> favorites = new HashMap<>();
-        favorites.put("id",1);
         // Add a new document with a generated ID
         db.collection("users").document(user.getUid()).collection("favorites")
                 .add(favorites)

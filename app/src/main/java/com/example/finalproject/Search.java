@@ -111,11 +111,7 @@ public class Search extends AppCompatActivity implements OnSuccessListener<Locat
         System.out.println("Go Button Clicked");
         String nameText = nameEditText.getText().toString();
         String locText = locationEditText.getText().toString();
-        if(nameText.length() == 0 || locText.length() == 0){
-            Toast.makeText(Search.this,"Please enter a name or location", Toast.LENGTH_SHORT).show();
-        }else{
-            getBusinessByName(nameText,locText);
-        }
+        getBusinessByName(nameText,locText);
 
     }
 
@@ -154,7 +150,6 @@ public class Search extends AppCompatActivity implements OnSuccessListener<Locat
 
     @Override
     public void onSuccess(Location location) {
-        //Get Weather by Location
         String lat = String.valueOf(location.getLatitude());
         String lon = String.valueOf(location.getLongitude());
         String nameText = nameEditText.getText().toString();
@@ -166,6 +161,63 @@ public class Search extends AppCompatActivity implements OnSuccessListener<Locat
 
     private void getBusinessByLocation(String lat, String lon, String name) {
         String url = getString(R.string.YELP_API_URL_TERM) + name + "&latitude=" + lat + "&longitude=" + lon;
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
+                (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        JSONArray results;
+                        try {
+                            results = response.getJSONArray("businesses");
+                            ArrayList<String> listViewArray = new ArrayList<String>();
+                            for(int i = 0; i < results.length(); i++){
+                                listViewArray.add(results.getJSONObject(i).getString("name"));
+                            }
+                            ArrayAdapter listViewAdapter = new ArrayAdapter(context,android.R.layout.simple_list_item_1,listViewArray);
+                            listView.setAdapter(listViewAdapter);
+                            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+                                @Override
+                                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                                    try {
+                                        JSONObject result = results.getJSONObject(position);
+                                        currentBusiness.setName(result.getString("name"));
+                                        currentBusiness.setId(result.getString("id"));
+                                        currentBusiness.setPhone(result.getString("display_phone"));
+                                        currentBusiness.setAddress(result.getJSONObject("location").getString("address1"));
+                                        currentBusiness.setRating(result.getString("rating"));
+                                        currentBusiness.setPrice(result.getString("price"));
+                                        currentBusiness.setLat(result.getJSONObject("coordinates").getString("latitude"));
+                                        currentBusiness.setLon(result.getJSONObject("coordinates").getString("longitude"));
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
+                                    Intent intent = new Intent(context, Result.class);
+                                    startActivity(intent);
+                                }
+                            });
+                        } catch (JSONException e) {
+                            System.out.println("JSON EXPLOSION");
+                            System.out.println(e);
+                        }
+                    }
+                }, new Response.ErrorListener() {
+
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        System.out.println("ERROR WITH VOLLEY REQUEST");
+
+                    }
+                }) {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> headerMap = new HashMap<String, String>();
+                headerMap.put("Authorization", "Bearer " + getString(R.string.YELP_API_KEY));
+                return headerMap;
+            }
+        };
+
+        queue.add(jsonObjectRequest);
     }
 
     private void getBusinessByName(String name, String loc) {
